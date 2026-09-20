@@ -11,6 +11,7 @@ import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedExce
 import software.amazon.awssdk.services.dynamodb.model.Update;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemResponse;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class RequestRepository {
     }
 
     public Request findById(String id) {
-        return requestTable.getItem(id);
+        return requestTable.getItem(Key.builder().partitionValue(id).build());
     }
 
     public List<Request> findAllPending() {

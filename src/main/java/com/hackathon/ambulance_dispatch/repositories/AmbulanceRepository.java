@@ -8,6 +8,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class AmbulanceRepository {
     }
 
     public Ambulance findById(String id) {
-        return ambulanceTable.getItem(id);
+        return ambulanceTable.getItem(Key.builder().partitionValue(id).build());
     }
 
     public List<Ambulance> findAvailableAmbulances() {

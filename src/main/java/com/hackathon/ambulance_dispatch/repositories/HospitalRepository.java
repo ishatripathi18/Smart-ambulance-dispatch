@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class HospitalRepository {
     }
 
     public Hospital findById(String id) {
-        return hospitalTable.getItem(id);
+        return hospitalTable.getItem(Key.builder().partitionValue(id).build());
     }
 
     public List<Hospital> findAll() {
