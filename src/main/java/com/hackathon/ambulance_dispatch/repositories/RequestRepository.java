@@ -79,4 +79,35 @@ public class RequestRepository {
             return false;
         }
     }
+
+    public void updateStatus(String requestId, String newStatus) {
+        UpdateItemRequest updateRequest = UpdateItemRequest.builder()
+                .tableName("Requests")
+                .key(java.util.Map.of("id", software.amazon.awssdk.services.dynamodb.model.AttributeValue.builder()
+                        .s(requestId)
+                        .build()))
+                .updateExpression("SET #status = :newStatus")
+                .expressionAttributeNames(java.util.Map.of("#status", "status"))
+                .expressionAttributeValues(java.util.Map.of(
+                        ":newStatus", software.amazon.awssdk.services.dynamodb.model.AttributeValue.builder()
+                                .s(newStatus)
+                                .build()
+                ))
+                .build();
+
+        dynamoDbClient.updateItem(updateRequest);
+    }
+
+    public Request findByAssignedDriverId(String driverId) {
+        List<Request> allRequests = new ArrayList<>();
+        requestTable.scan()
+                .items()
+                .forEach(allRequests::add);
+
+        return allRequests.stream()
+                .filter(req -> driverId.equals(req.getAssignedDriverId()) && 
+                       ("ACCEPTED".equals(req.getStatus()) || "EN_ROUTE".equals(req.getStatus()) || "ARRIVED".equals(req.getStatus())))
+                .findFirst()
+                .orElse(null);
+    }
 }
